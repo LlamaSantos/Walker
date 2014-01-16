@@ -3,80 +3,78 @@ var util = require('util');
 var path = require('path');
 var EventEmitter = require('events').EventEmitter;
 var domain = require('domain').createDomain();
+var async = require('async');
 var _ = require('underscore');
+
+function Ticker(done){
+	var counter = 0;
+	return {
+		add : function (len){
+			counter += len;
+		},
+		done : function (){
+			counter--;
+			if (counter === 0){
+				done();
+			}
+		}
+	};
+};
+
+
 
 function Walker (options){
 	var that = this;
+	var errors = [];
+
 	options = options || {};
 	this.relativePaths = options.relativePaths || false;
-
 	// -- Wire Through the Error
 	domain.on('error', function (err){
+		errors = errors ? [err] : errors.push(err), errors;
 		that.emit('error', err);
 	});
+
+	this.find = function (dir, cb){
+		errors = null;
+		var that = this
+			, basename = path.basename(dir)
+			, directory = path.dirname(dir)
+			, recursiveIndex = dir.indexOf('**')
+			, dirpath =  recursiveIndex === -1 ? directory : directory.substring(0, recursiveIndex)
+			, files = []
+			, counter = 0;
+
+		var tick = Ticker(function (){
+			cb(errors, files);
+		});
+
+		function walkin(dir, done){
+			fs.readdir(dir, domain.intercept(function (contents){
+				tick.add(contents.length);
+				if (done)
+					done();
+
+				contents.forEach(function (item){
+					var entity = path.join(dir, item);
+
+					fs.stat(entity, domain.intercept(function (stats){
+						if (stats.isDirectory())
+							walkin(entity, tick.done);
+						else{
+							if (stats.isFile() && path.extname(basename) === path.extname(entity))
+								files.push(entity);
+
+							tick.done(entity);
+						} 
+					}));
+				});
+			}));
+		};
+
+		walkin(dirpath);
+	};
 };
 util.inherits(Walker, EventEmitter);
 
-
-Walker.prototype.find = function (dir, cb){
-	var that = this;
-	var basename = path.basename(dir);
-	var directory = path.dirname(dir);
-	var recursiveIndex = dir.indexOf('**');
-
-	var dirpath =  recursiveIndex == -1 ? directory : directory.substring(0, recursiveIndex);
-	var files = [];
-	var counter = 0;
-
-	function walkin(d) {
-		counter++;
-		fs.readdir(d, domain.intercept(function (items){
-			items.forEach(function (item){
-
-				var entity = path.join(d, item);
-				var stats = fs.statSync(entity);
-
-				if (stats.isDirectory() && recursiveIndex > 0){
-					walkin(entity);
-				}
-				else if (stats.isFile()) {
-					if (path.extname(basename) == path.extname(item)){
-						files.push(entity);
-						that.emit('file', entity);
-					}
-				}
-
-			});
-
-			counter--;
-			if (counter == 0){
-				that.emit('done', files);
-				cb(files);
-			}
-
-		}));
-	};
-
-	walkin(dirpath);
-};
-
-
-var walker = new Walker();
-
-walker.on('error', function (err){
-	console.info("ERROR:\t" + err);
-});
-
-walker.on('file', function (item) {
-	console.info("ITEM:\t" + item);
-});
-
-walker.on('done', function (items){
-	console.info('ITEMS:\t' + items);
-});
-
-walker.find("D:\\github\\Iskamo\\features\\**\\*.html", function (files){
-	console.info('All the files!');
-	console.info(files);
-});
-
+module.exports = Walker;

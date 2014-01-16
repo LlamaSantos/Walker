@@ -5,9 +5,11 @@
 		"tests" : "mocha -spec R"
 	},
 	"dependencies" : {
-		""
+		"underscore" : "*",
+		"async" : "*"
 	},
 	"devDependencies" : {
-		"mocha" : "*"
+		"mocha" : "*",
+		"chai" : "*"
 	}
 }
