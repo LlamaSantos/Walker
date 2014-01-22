@@ -1,9 +1,13 @@
 {
 	"name" : "walker",
 	"version" : "0.0.1",
-	"scripts" : {
-		"tests" : "mocha -spec R"
-	},
+	"author" : "James R. White <james@llamasantos.com>",
+	"keywords" : [
+		"filesystem",
+		"walk",
+		"eventemitter",
+		"simple"
+	],
 	"dependencies" : {
 		"underscore" : "*",
 		"async" : "*"
@@ -11,5 +15,9 @@
 	"devDependencies" : {
 		"mocha" : "*",
 		"chai" : "*"
-	}
+	},
+	"scripts" : {
+		"test" : "mocha -spec R"
+	},
+	"license" : "MIT"
 }
