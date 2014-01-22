@@ -9,6 +9,7 @@ Node.js Filesystem Walker
 //Usage
 
 var walker = new Walker();
+
 walker.find('./test/**/*.txt', function (err, files){
 	console.info(files);
 });
