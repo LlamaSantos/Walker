@@ -17,7 +17,7 @@
 		"chai" : "*"
 	},
 	"scripts" : {
-		"test" : "mocha -spec R"
+		"test" : "mocha -R spec"
 	},
 	"license" : "MIT"
 }
