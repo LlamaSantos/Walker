@@ -3,6 +3,20 @@ Walker
 
 Node.js Filesystem Walker
 
+[![Build Status](https://travis-ci.org/LlamaSantos/Walker.png?branch=master)](https://travis-ci.org/LlamaSantos/Walker)
+
+```JavaScript
+//Usage
+
+var walker = new Walker();
+walker.find('./test/**/*.txt', function (err, files){
+	console.info(files);
+});
+
+// Output
+// [./test/dir1/file1.txt, ./test/dir2/file2.txt]
+```
+
 
 ##License
 
