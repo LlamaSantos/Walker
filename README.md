@@ -22,6 +22,22 @@ walkin.find('./test/**/*.txt', function (err, files){
 // [./test/dir1/file1.txt, ./test/dir2/file2.txt]
 ```
 
+In addition direct searching for files will also work.
+
+```JavaScript
+// Usage
+var Walkin = require('walkin');
+
+var walkin = new Walkin();
+
+walkin.find('./test/**/config.json', function (err, files){
+	console.info(files);
+});
+
+// Output
+// [./test/dir1/config.json, ./test/dir2/config.json]
+```
+
 
 ##License
 

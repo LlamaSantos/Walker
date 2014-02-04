@@ -40,6 +40,7 @@ function Walkin (options){
 		var that = this
 			, basename = path.basename(dir)
 			, directory = path.dirname(dir)
+			, is_wildcard = basename.replace(path.extname(basename), '') === '*'
 			, recursiveIndex = dir.indexOf('**')
 			, dirpath =  recursiveIndex === -1 ? directory : directory.substring(0, recursiveIndex)
 			, files = []
@@ -62,7 +63,9 @@ function Walkin (options){
 						if (stats.isDirectory())
 							walkin(entity, tick.done);
 						else{
-							if (stats.isFile() && path.extname(basename) === path.extname(entity))
+							if (stats.isFile() 
+								&& (is_wildcard && path.extname(basename) === path.extname(entity))
+								|| (!is_wildcard && basename === path.basename(entity)))
 								files.push(entity);
 
 							tick.done(entity);

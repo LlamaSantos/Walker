@@ -13,5 +13,14 @@ describe("Walkin tests", function (){
 				done();
 			});
 		});
+
+		it ('should find all files named config.json', function (done){
+			var walkin = new Walkin();
+			walkin.find('./test/**/config.json', function (err, files){
+				files.should.have.length(2);
+				console.info(files);
+				done();
+			});
+		});
 	})
 });
