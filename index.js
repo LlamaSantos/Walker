@@ -47,7 +47,10 @@ function Walkin (options){
 			, counter = 0;
 
 		var tick = Ticker(function (){
-			cb(errors, files);
+			if (cb && typeof cb === 'function')
+				cb(errors, files);
+
+			that.emit('done', errors, files);
 		});
 
 		function walkin(dir, done){

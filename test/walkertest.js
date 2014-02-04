@@ -18,9 +18,19 @@ describe("Walkin tests", function (){
 			var walkin = new Walkin();
 			walkin.find('./test/**/config.json', function (err, files){
 				files.should.have.length(2);
-				console.info(files);
 				done();
 			});
+		});
+
+		it ('should not throw an exception if no callback is supplied', function (done){
+			var walkin = new Walkin();
+
+			walkin.on('done', function (err, files){
+				files.should.have.length(2);
+				done();
+			});
+
+			walkin.find('./test/**/*.txt');
 		});
 	})
 });
