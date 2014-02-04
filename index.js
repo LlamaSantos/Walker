@@ -35,6 +35,30 @@ function Walkin (options){
 		that.emit('error', err);
 	});
 
+	function walkin(dir, tick, comp, handle, done){
+		fs.readdir(dir, domain.intercept(function (contents){
+			tick.add(contents.length);
+			if (done)
+				done();
+
+			contents.forEach(function (item){
+				var entity = path.join(dir, item);
+
+				fs.stat(entity, domain.intercept(function (stats){
+					if (stats.isDirectory())
+						walkin(entity, tick, comp, handle, tick.done);
+					else{
+						if (stats.isFile() && comp(entity)){
+							handle(entity);
+						}
+
+						tick.done(entity);
+					} 
+				}));
+			});
+		}));
+	}
+
 	this.find = function (dir, cb){
 		errors = null;
 		var that = this
@@ -53,36 +77,38 @@ function Walkin (options){
 			that.emit('done', errors, files);
 		});
 
-		function walkin(dir, done){
-			fs.readdir(dir, domain.intercept(function (contents){
-				tick.add(contents.length);
-				if (done)
-					done();
-
-				contents.forEach(function (item){
-					var entity = path.join(dir, item);
-
-					fs.stat(entity, domain.intercept(function (stats){
-						if (stats.isDirectory())
-							walkin(entity, tick.done);
-						else{
-							if (stats.isFile() 
-								&& (is_wildcard && path.extname(basename) === path.extname(entity))
-								|| (!is_wildcard && basename === path.basename(entity))){
-
-								files.push(entity);
-								that.emit('file', entity);
-							}
-
-							tick.done(entity);
-						} 
-					}));
-				});
-			}));
-		};
-
-		walkin(dirpath);
+		walkin(dirpath, tick, 
+			function comp(entity){
+				return (is_wildcard && path.extname(basename) === path.extname(entity))
+								|| (!is_wildcard && basename === path.basename(entity));
+			},
+			function assign(entity){
+				files.push(entity);
+				that.emit('file', entity);
+			});
 	};
+
+	this.match = function (dir, expr, cb){
+		errors = null;
+		var that = this;
+		var files = [];
+
+		var tick = Ticker(function (){
+			if (cb && typeof cb === 'function')
+				cb(errors, files);
+
+			that.emit('done', errors, files);
+		});
+
+		walkin(dir, tick,
+			function comp(entity){
+				return (entity.match(expr) || []).length > 0;
+			},
+			function assign(entity){
+				files.push(entity);
+				that.emit('file', entity);
+			});
+	}
 };
 util.inherits(Walkin, EventEmitter);
 

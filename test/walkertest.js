@@ -4,7 +4,7 @@ describe("Walkin tests", function (){
 
 	chai.should();
 
-	describe("Callback tests", function (){
+	describe("Find tests", function (){
 
 		it ('should work', function (done){
 			var walkin = new Walkin();
@@ -47,5 +47,16 @@ describe("Walkin tests", function (){
 
 			walkin.find('./test/**/*.txt');
 		});
-	})
+	});
+	describe("Match tests", function (){
+
+		it ('should find all files with a .txt or .json extension', function (done){
+			var walkin = new Walkin;
+			walkin.match('./test', /(\.txt)|(\.json)$/gi, function (err, files){
+				files.should.have.length(5);
+				done();
+			});
+		});
+
+	});
 });
