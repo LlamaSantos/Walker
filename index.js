@@ -3,8 +3,8 @@ var util = require('util');
 var path = require('path');
 var EventEmitter = require('events').EventEmitter;
 var domain = require('domain').createDomain();
-var async = require('async');
-var _ = require('underscore');
+//var async = require('async');
+//var _ = require('underscore');
 
 function Ticker(done){
 	var counter = 0;
@@ -23,7 +23,7 @@ function Ticker(done){
 
 
 
-function Walker (options){
+function Walkin (options){
 	var that = this;
 	var errors = [];
 
@@ -75,6 +75,6 @@ function Walker (options){
 		walkin(dirpath);
 	};
 };
-util.inherits(Walker, EventEmitter);
+util.inherits(Walkin, EventEmitter);
 
-module.exports = Walker;
+module.exports = Walkin;

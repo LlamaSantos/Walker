@@ -9,8 +9,6 @@
 		"simple"
 	],
 	"dependencies" : {
-		"underscore" : "*",
-		"async" : "*"
 	},
 	"devDependencies" : {
 		"mocha" : "*",

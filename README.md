@@ -1,8 +1,8 @@
-Walker
+Walkin
 ======
 
 Node.js Filesystem Walker
-[![Build Status](https://travis-ci.org/LlamaSantos/Walker.png?branch=master)](https://travis-ci.org/LlamaSantos/Walker)
+[![Build Status](https://travis-ci.org/LlamaSantos/Walkin.png?branch=master)](https://travis-ci.org/LlamaSantos/Walkin)
 
 ###Purpose
 Provide a consistent API through both an event emitter as well as a callback.  Both API's allow for a flexible one size fits all component.
