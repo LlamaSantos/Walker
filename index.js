@@ -68,8 +68,11 @@ function Walkin (options){
 						else{
 							if (stats.isFile() 
 								&& (is_wildcard && path.extname(basename) === path.extname(entity))
-								|| (!is_wildcard && basename === path.basename(entity)))
+								|| (!is_wildcard && basename === path.basename(entity))){
+
 								files.push(entity);
+								that.emit('file', entity);
+							}
 
 							tick.done(entity);
 						} 

@@ -32,5 +32,20 @@ describe("Walkin tests", function (){
 
 			walkin.find('./test/**/*.txt');
 		});
+
+		it ('should emit the "file" event when a file is found', function (done){
+			var walkin = new Walkin();
+			var counter = 0;
+			walkin.on('file', function (file){
+				file.should.be.a('string');
+				++counter;
+			});
+			walkin.on('done', function (){
+				counter.should.equal(2);
+				done();
+			})
+
+			walkin.find('./test/**/*.txt');
+		});
 	})
 });
