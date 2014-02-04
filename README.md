@@ -40,8 +40,8 @@ walkin.find('./test/**/config.json', function (err, files){
 
 ##Authors
 Contributions from
-	James R. White
-	Alexander Marinenko
+	* James R. White
+	* Alexander Marinenko
 
 ##License
 
