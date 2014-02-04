@@ -2,11 +2,12 @@
 	"name" : "walkin",
 	"version" : "0.0.1",
 	"author" : "James R. White <james@llamasantos.com>",
+	"repository" : "https://github.com/LlamaSantos/Walkin.git",
 	"keywords" : [
 		"filesystem",
 		"walk",
 		"eventemitter",
-		"simple"
+		"find"
 	],
 	"dependencies" : {
 	},
