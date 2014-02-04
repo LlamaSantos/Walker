@@ -10,10 +10,11 @@ Provide a consistent API through both an event emitter as well as a callback.  B
 
 ```JavaScript
 //Usage
+var Walkin = require("walkin");
 
-var walker = new Walker();
+var walkin = new Walkin();
 
-walker.find('./test/**/*.txt', function (err, files){
+walkin.find('./test/**/*.txt', function (err, files){
 	console.info(files);
 });
 
