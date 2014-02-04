@@ -38,6 +38,10 @@ walkin.find('./test/**/config.json', function (err, files){
 // [./test/dir1/config.json, ./test/dir2/config.json]
 ```
 
+##Authors
+Contributions from
+	James R. White
+	Alexander Marinenko
 
 ##License
 
