@@ -1,7 +1,11 @@
 {
 	"name" : "walkin",
-	"version" : "0.3.0",
+	"version" : "0.3.1",
 	"author" : "James R. White <james@llamasantos.com>",
+	"contributors" : [
+		{ "name" : "James R. White" },
+		{ "name" : "Alexander Marinenko" }
+	],
 	"repository" : "https://github.com/LlamaSantos/Walkin.git",
 	"keywords" : [
 		"filesystem",
