@@ -59,6 +59,20 @@ function Walkin (options){
 		}));
 	}
 
+	function walkinSync(dir, comp, handle) {
+		fs.readdirSync(dir).forEach(function (item){
+			var entity = path.join(dir, item);
+
+			var stats = fs.statSync(entity);
+			if (stats.isDirectory())
+				walkinSync(entity, comp, handle);
+			else{
+				if (stats.isFile() && comp(entity))
+					handle(entity);
+			}
+		})
+	}
+
 	this.find = function (dir, cb){
 		errors = null;
 		var that = this
@@ -67,8 +81,7 @@ function Walkin (options){
 			, is_wildcard = basename.replace(path.extname(basename), '') === '*'
 			, recursiveIndex = dir.indexOf('**')
 			, dirpath =  recursiveIndex === -1 ? directory : directory.substring(0, recursiveIndex)
-			, files = []
-			, counter = 0;
+			, files = [];
 
 		var tick = Ticker(function (){
 			if (cb && typeof cb === 'function')
@@ -86,6 +99,28 @@ function Walkin (options){
 				files.push(entity);
 				that.emit('file', entity);
 			});
+	};
+
+	this.findSync = function (dir) {
+		var that = this
+			, basename = path.basename(dir)
+			, directory = path.dirname(dir)
+			, is_wildcard = basename.replace(path.extname(basename), '') === '*'
+			, recursiveIndex = dir.indexOf('**')
+			, dirpath =  recursiveIndex === -1 ? directory : directory.substring(0, recursiveIndex)
+			, files = [];
+
+		walkinSync(dirpath,
+			function comp(entity){
+				return (is_wildcard && path.extname(basename) === path.extname(entity))
+								|| (!is_wildcard && basename === path.basename(entity));
+			},
+			function assign(entity){
+				files.push(entity);
+				that.emit('file', entity);
+			});
+
+		return files;
 	};
 
 	this.match = function (dir, expr, cb){
@@ -108,6 +143,22 @@ function Walkin (options){
 				files.push(entity);
 				that.emit('file', entity);
 			});
+	};
+
+	this.matchSync = function (dir, expr) {
+		var that = this;
+		var files = [];
+
+		walkinSync(dir, 
+			function comp(entity){
+				return (entity.match(expr) || []).length > 0;
+			},
+			function assign(entity){
+				files.push(entity);
+				that.emit('file', entity);
+			});
+
+		return files;
 	}
 };
 util.inherits(Walkin, EventEmitter);

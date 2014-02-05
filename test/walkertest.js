@@ -59,4 +59,23 @@ describe("Walkin tests", function (){
 		});
 
 	});
+
+	describe("FindSync tests", function (){
+
+		it ('should find all files with a .txt extension', function (){
+			var walkin = new Walkin;
+			var files = walkin.findSync('./test/**/*.txt');
+			files.should.have.length(2);
+		});
+
+	});
+
+	describe("MatchSync tests", function (){
+
+		it ('should sync find all files with a .txt or .json extension', function (){
+			var walkin = new Walkin;
+			var files = walkin.matchSync('./test', /(\.txt)|(\.json)$/gi);
+			files.should.have.length(5);
+		})
+	});
 });
